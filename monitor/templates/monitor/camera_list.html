@@ -1,0 +1,70 @@
+{% extends 'monitor/base.html' %} {% block title %}Monitor camaras{% endblock %}{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Monitor</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a href="{% url 'camera:cameras'%}" type="button" class="nav-link">Camaras</a>
+
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'camera:cameras'%}" type="button" class="nav-link">Otro</a>
+            </li>
+
+        </ul>
+        <a href="{% url 'admin:index'%}" type="button" class="nav-link">Admin</a>
+        <button href="{% url 'camera:cameras'}" class="btn btn-danger my-2 my-sm-0" type="submit">Salir</button>
+    </div>
+</nav>
+<main role="main">
+
+
+    <div class="container mb-4">
+        <h3>Bienvenido {{ username|capfirst }}</h3>
+        <br>
+        <div align="left" class="btn_crear mb-3">
+            <a href="{% url 'camera:add-camera'%}" type="button" class="btn btn-success">Agregar camara</a>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th width="35%">Nombre</th>
+                    <th>Camara id</th>
+                    <th>Usuario</th>
+                    <th>Ip</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for camera in camera_list %}
+                <tr>
+                    <td>{{ camera.id }}</td>
+                    <td>{{ camera.usuario }}</td>
+                    <td>{{ camera.ip }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'camera:camera' camera.id camera.usuario|slugify %}">
+                            {% csrf_token %}
+                            <div class="btn-group">
+
+                                <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Ver" type="button" class="btn btn-success">Ver </a> {% if rol %}
+                                <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Editar" type="button" class="btn btn-primary">Editar </a>
+                                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                                Eliminar
+                                {% endif %}
+                            </button>
+                            </div>
+                        </form>
+
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+</main>
+{% endblock %}

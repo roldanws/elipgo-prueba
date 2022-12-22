@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Se carga bootstrap4 -->
+    {% load bootstrap4 %}
+    <!-- Se carga css -->
+    {% bootstrap_css %}
+
+
+</head>
+
+
+
+<body>
+
+    <!-- Contenido de cada vista -->
+    {% block content %} {% endblock %}
+
+    <!-- Jquery -->
+    {% bootstrap_javascript jquery='full' %}
+</body>
+
+</html>

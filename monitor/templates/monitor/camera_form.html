@@ -1,0 +1,16 @@
+{% extends 'monitor/base.html' %} {% block title %} Crear cliente{% endblock %} {% block content %}
+
+
+
+<main>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <!-- obtiene datos del modelo -->
+        {{ form.as_p }}
+
+
+        <button type="submit" class="btn btn-primary">Conectar</button>
+        <a href="./" type="submit" class="btn btn-primary">Cancelar</a>
+
+    </form>
+</main>
+{% endblock %}
