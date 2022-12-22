@@ -130,10 +130,7 @@ class Interfaz:
 def main():
     
     ### ------------------------------- Declarar la interfaz
-    auth=HTTPDigestAuth('myUsername', 'myPassword')
     interfaz_api = Interfaz()
-    #interfaz_hooks = Interfaz('http://127.0.0.1:8000/hooks/')
-    ### ------------------------------- Proceso para calcular una tarifa
     print("#-------------------Prueba Camara: ")
     body = ""
     #metodo = "GET"
@@ -147,78 +144,8 @@ def main():
     interfaz_api.establecer_query('configManager.cgi?action=getConfig&name=General')
     interfaz_api.establecer_query('snapshot.cgi?channel=1')
     response = interfaz_api.enviar(Interfaz.PROCESO,body)
-    
-    #datos = interfaz_api.response[0]
     print(response.text)
-    return 0
-    descuento = datos['descuento']
-    tiempo_base = datos['tiempo_base']
-    monto_base = datos['monto_base']
-    fraccion_tiempo = datos['fraccion_tiempo']
-    incremental = datos['incremental']
-
-    tiempo_estacionado =  235
-    descuento = 0
-    monto = calcular_tarifa(tiempo_estacionado,descuento,tiempo_base,monto_base,fraccion_tiempo,incremental)
-    print("Monto: ",monto)
-    '''
-    ### ------------------------------- Proceso para registrar un pago
-    print("#-------------------Prueba Pago: ")
-    body = {
-    "folio_boleto": 223,
-    "expedidor_boleto": 1,
-    "fecha_expedicion_boleto": "2020-04-07T12:12:00Z",
-    "codigo": 1,
-    "registrado": True,
-    "monto": 10,
-    "cambio": 0,
-    "monedas": "0:0",
-    "billetes": "0:0",
-    "cambio_entregado": "0:0",
-    "equipo_id": 1
-    }
-    metodo = "POST"
-    interfaz_api.establecer_url('http://127.0.0.1:8000/api/corte?d1=28-04-2020&t1=19:14:18&d2=29-04-2020&t2=19:17:18')
-    interfaz_api.establecer_metodo('GET')
-    interfaz_api.establecer_encabezado({'Content-Type': 'application/json'})
-    print("Metodo....: ",interfaz_api.obtener_metodo({'Content-Type': 'application/json'}))
-    response = interfaz_api.enviar(Interfaz.PROCESO,body)
-    print("Respuesta: ",response)
-    '''
-    ### ------------------------------- Proceso para obtener el corte
-    fecha_1 = "28-04-2020"
-    hora_1 = "19:14:18"
-    fecha_2 = "29-04-2021"
-    hora_2 = "19:17:18"
-    url = "http://127.0.0.1:8000/api/corte?f1={0}&h1={1}&f2={2}&h2={3}".format(fecha_1,hora_1,fecha_2,hora_2)
-    interfaz_api.establecer_url(url)
-    interfaz_api.establecer_metodo('GET')
-    interfaz_api.establecer_encabezado({'Content-Type': 'application/json'})
-    response = interfaz_api.enviar(Interfaz.PROCESO,body)
-    print("#-------------------Prueba Corte: ",response)
-    print("Exitosos: ",response['exitosos'])
-    print("Incidencias: ",response['incidencias'])
-    print("Cancelados: ",response['cancelados'])
-    print("Ingreso total: ",response['ingreso'])
-
-
-def calcular_tarifa(tiempo_estacionado,descuento,tiempo_base,monto_base,fraccion_tiempo,incremental):
-    monto_total = 0
-    if tiempo_base > tiempo_estacionado:
-        monto_total = monto_base
-        return monto_total
-    else:
-        monto_total += monto_base
-        tiempo_restante = tiempo_estacionado - tiempo_base
-        fracciones_de_tiempo =  int(tiempo_restante/fraccion_tiempo)
-        print("Fracciones: ",fracciones_de_tiempo)
-        monto_total += fracciones_de_tiempo * incremental
-        return monto_total
-
-#def registrar_pago(tiempo_estacionado,descuento,tiempo_base,monto_base,fraccion_tiempo,incremental):
-
+    
 if __name__ == "__main__":
     main()
 
-
-## 1:55
