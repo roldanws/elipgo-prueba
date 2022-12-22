@@ -20,17 +20,13 @@ class StaffRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         return super(StaffRequiredMixin, self).dispatch(request, *args, **kwargs)
     
-class HomePageView(TemplateView):
-    """Clase que renderiza el index del sistema"""
-    template_name = 'home.html'
+
     
 class CameraListView(ListView):
     model = Camera
     
     def get_queryset(self):
-        # usuario = self.request.user
         camera=Camera.objects.all()
-        # print("Usuario y cliente: ", usuario, camera)
         return camera
 
 class CameraDetailView(DetailView):
@@ -49,6 +45,8 @@ class CameraDetailView(DetailView):
         interfaz_api.establecer_metodo('GET')
         #interfaz_api.establecer_encabezado({'Content-Type': 'application/json'})
 
+
+        ### ------------------------------- Accediendo a metodos del api
         """ Obtener informacion general """
         interfaz_api.establecer_query('configManager.cgi?action=getConfig&name=General')
         general = interfaz_api.enviar(Interfaz.PROCESO,body)
@@ -76,19 +74,12 @@ class CameraDetailView(DetailView):
             snapshot.raw.decode_content = True
             shutil.copyfileobj(snapshot.raw, f)  
 
-        """
-        file = open("monitor/static/monitor/snapshot.jpg", "w")
-        file.write(snapshot.text)
-        file.close()"""
-        
-
         context['general']=general.text
         context['current_time']=current_time.text
         context['locales']=locales.text
         context['device_type']=device_type.text
         context['machine_name']=machine_name.text
         context['snapshot']=snapshot.text
-
         return context
 
 class CameraCreateView(CreateView):
