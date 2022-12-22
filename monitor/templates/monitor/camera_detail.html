@@ -29,9 +29,31 @@
         <p>Usuario: {{camera.usuario|striptags|safe|truncatechars:"200"}}</p>
         <p>Ip: {{camera.ip|striptags|safe|truncatechars:"200"}}</p>
         <p>puerto: {{camera.puerto|striptags|safe|truncatechars:"200"}}</p>
-        <p>General: {{general}}</p>
-        <p>Hora actial: {{current_time}}</p>
-        <p>Locales: {{locales}}</p>
+
+        <p>Informacion general: </p>
+        <ul>
+            {% for key,value in general.items %}
+            <li>
+                {{ key }} : {{ value }}
+            </li>
+            {% endfor %}
+        </ul>
+        <p>Hora actual: </p>
+        <ul>
+            {% for key,value in current_time.items %}
+            <li>
+                {{ key }} : {{ value }}
+            </li>
+            {% endfor %}
+        </ul>
+        <p>Locales: </p>
+        <ul>
+            {% for key,value in locales.items %}
+            <li>
+                {{ key }} : {{ value }}
+            </li>
+            {% endfor %}
+        </ul>
         <p>Tipo del dispositivo: {{device_type}}</p>
         <p>Nombre de la maquina: {{machine_name}}</p>
         <p>Imagen capturada:</p>

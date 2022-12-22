@@ -9,12 +9,16 @@ import os
 import shutil
 from .models import Camera
 from .forms import CameraForm
-from .Interfaz import Interfaz
 import requests,json
 from requests.auth import HTTPDigestAuth
 
-# Create your views here.
+from monitor.Monitor.Interfaz import Interfaz
+from monitor.Monitor.Comunicacion import Comunicacion
+from monitor.Monitor.Variable import Variable
+from monitor.Monitor.Camera import Camera as Cam
 
+
+# Create your views here.
 class StaffRequiredMixin(object):
     @method_decorator(staff_member_required)
     def dispatch(self, request, *args, **kwargs):
@@ -22,54 +26,88 @@ class StaffRequiredMixin(object):
     
 
     
-class CameraListView(ListView):
-    model = Camera
-    
-    def get_queryset(self):
-        camera=Camera.objects.all()
-        return camera
-
 class CameraDetailView(DetailView):
+    """ Vista encargada de detallar el dispositivo seleccionado """
     model = Camera
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        ### ------------------------------- Declarar la interfaz
-        interfaz_api = Interfaz()
-        print("#-------------------Prueba Camara: ")
-        body = ""
-        interfaz_api.establecer_protocol('http')
-        interfaz_api.establecer_server('elipgomexico.ddns.net:1938')
-        interfaz_api.establecer_abs_path('cgi-bin')
-        interfaz_api.establecer_auth(HTTPDigestAuth('test', 'test$2022'))
-        interfaz_api.establecer_metodo('GET')
-        #interfaz_api.establecer_encabezado({'Content-Type': 'application/json'})
+        ###-----Nueva estructura
+        puerto = Interfaz("api")
+        puerto.modificarConfiguracion(
+                                    dispositivo = Interfaz.CAMARA_DAHUA, 
+                                    protocolo = 'http', 
+                                    servidor = 'elipgomexico.ddns.net', 
+                                    puerto = '1938', 
+                                    usuario = 'test', 
+                                    password = 'test$2022'
+                                    )
+        comunicacion = Comunicacion ()
+        puerto.inicializar()
+        
+        # Se crea y se configura el dispositivo
+        camera1 = Cam("Camera 1", "CAM-001", "En camara")
+        camera1.establecerPuerto(puerto)
+        camera1.establecerComunicacion (comunicacion)
+        
+        general = camera1.obtener_datos_generales()
+        current_time = camera1.obtener_current_time()
+        locales = camera1.obtener_locales_config()
 
+        snapshot = camera1.obtener_snapshot()
+        with open("monitor/static/monitor/snapshot.jpg", 'wb') as f:
+            snapshot.raw.decode_content = True
+            shutil.copyfileobj(snapshot.raw, f)  
+
+
+        context['general']=general
+        context['current_time']=current_time
+        context['locales']=locales
+
+        """context['device_type']=device_type.text
+        context['machine_name']=machine_name.text
+        context['snapshot']=snapshot.text"""
+        return context
+
+        '''
+        ### ------------------------------- Declarar la interfaz
+        interfaz = Interfaz()
+        print("#-------------------Prueba Camara: ")
+        body = "b"
+        interfaz.establecer_protocol('http')
+        interfaz.establecer_server('elipgomexico.ddns.net:1938')
+        interfaz.establecer_abs_path('cgi-bin')
+        interfaz.establecer_auth(HTTPDigestAuth('test', 'test$2022'))
+        interfaz.establecer_metodo('GET')
+        #interfaz.establecer_encabezado({'Content-Type': 'application/json'})
 
         ### ------------------------------- Accediendo a metodos del api
+        """ Obtener flujo de video"""
+        interfaz.establecer_ruta('cgi-bin/magicBox.cgi?action=getMachineName')
+        machine_name = interfaz.enviar(Interfaz.PROCESO,body)
+
         """ Obtener informacion general """
-        interfaz_api.establecer_query('configManager.cgi?action=getConfig&name=General')
-        general = interfaz_api.enviar(Interfaz.PROCESO,body)
+        interfaz.establecer_ruta('cgi-bin/configManager.cgi?action=getConfig&name=General')
+        general = interfaz.enviar(Interfaz.PROCESO,body)
 
         """ Obtener hora actual"""
-        interfaz_api.establecer_query('global.cgi?action=getCurrentTime')
-        current_time = interfaz_api.enviar(Interfaz.PROCESO,body)
+        interfaz.establecer_ruta('cgi-bin/global.cgi?action=getCurrentTime')
+        current_time = interfaz.enviar(Interfaz.PROCESO,body)
 
         """ Obtener locales"""
-        interfaz_api.establecer_query('configManager.cgi?action=getConfig&name=Locales')
-        locales = interfaz_api.enviar(Interfaz.PROCESO,body)
+        interfaz.establecer_ruta('cgi-bin/configManager.cgi?action=getConfig&name=Locales')
+        locales = interfaz.enviar(Interfaz.PROCESO,body)
 
         """ Obtener tipo"""
-        interfaz_api.establecer_query('magicBox.cgi?action=getDeviceType')
-        device_type = interfaz_api.enviar(Interfaz.PROCESO,body)
+        interfaz.establecer_ruta('cgi-bin/magicBox.cgi?action=getDeviceType')
+        device_type = interfaz.enviar(Interfaz.PROCESO,body)
 
         """ Obtener nombre de maquina"""
-        interfaz_api.establecer_query('magicBox.cgi?action=getMachineName')
-        machine_name = interfaz_api.enviar(Interfaz.PROCESO,body)
+        interfaz.establecer_ruta('cgi-bin/magicBox.cgi?action=getMachineName')
+        machine_name = interfaz.enviar(Interfaz.PROCESO,body)
 
         """ Obtener snapshot"""
-        interfaz_api.establecer_query('snapshot.cgi?channel=1')
-        snapshot = interfaz_api.enviar(Interfaz.PROCESO,body)
+        interfaz.establecer_ruta('cgi-bin/snapshot.cgi?channel=1')
+        snapshot = interfaz.enviar(Interfaz.PROCESO,body)
         with open("monitor/static/monitor/snapshot.jpg", 'wb') as f:
             snapshot.raw.decode_content = True
             shutil.copyfileobj(snapshot.raw, f)  
@@ -81,6 +119,37 @@ class CameraDetailView(DetailView):
         context['machine_name']=machine_name.text
         context['snapshot']=snapshot.text
         return context
+        '''
+
+
+class CameraListView(ListView):
+    """ Vista encargada de listar los dispositivos registrados """
+    model = Camera
+    def get_queryset(self):
+        camera=Camera.objects.all()
+        return camera
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        '''interfaz = Interfaz()
+        body = ""
+        print("con:::",context['camera_list'][0].ip, context['camera_list'][0].puerto)
+        interfaz.establecer_protocol('http')
+        interfaz.establecer_server('{}:{}'.format(context['camera_list'][0].ip,context['camera_list'][0].puerto))
+        interfaz.establecer_metodo('GET')
+        interfaz.establecer_auth(HTTPDigestAuth('test', 'test$2022'))
+
+        """ Obtener flujo de video"""
+        interfaz.establecer_ruta('cgi-bin/cgi-bin/magicBox.cgi?action=getSerialNo')
+        serial_no = interfaz.enviar(Interfaz.PROCESO,body)
+        context['serial_no']=serial_no.text
+
+        """ Suscribir a evento Motion"""
+        interfaz.establecer_ruta('cgi-bin/snapManager.cgi?action=attachFileProc&Flags[0]=Event&Events=[VideoMotion]&heartbeat=5')
+        r = interfaz.enviar(Interfaz.PROCESO,body)
+        print("Sucrubeee",r.text)
+        context['r']=r.text'''
+        return context
+
 
 class CameraCreateView(CreateView):
     model = Camera

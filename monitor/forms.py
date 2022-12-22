@@ -8,8 +8,8 @@ class CameraForm(forms.ModelForm):
         fields = ['usuario', 'password', 'ip', 'puerto']
         widgets = {
             'usuario': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Usuario'}),
-            'password': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Password'}),
-            'ip': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Ip  '}),
+            'password': forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'Password'}),
+            'ip': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Url  '}),
             'puerto': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Puerto  '}),
         }
         labels = {

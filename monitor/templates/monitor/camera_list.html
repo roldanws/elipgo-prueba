@@ -29,6 +29,32 @@
         <div align="left" class="btn_crear mb-3">
             <a href="{% url 'camera:add-camera'%}" type="button" class="btn btn-success">Agregar camara</a>
         </div>
+
+        <div class="row">
+            {% for camera in camera_list %}
+            <div class="col-3">
+                <div class="card">
+                    <img class="card-img-top" src="..." alt="Flujo de video">
+                    <iframe src="rtsp://test:test$2022@elipgomexico.ddns.net:1938/cam/realmonitor?channel=1&subtype=1"></iframe>
+                    <div class="card-body">
+                        <h5 class="card-title">Camera {{camera.id}}</h5>
+                        <p class="card-text">{{serial_no}}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">url:{{camera.ip}}</li>
+
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="card-link">Obtener imagen</a>
+                        <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Ver" type="button" class="card-link">Detalles </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
