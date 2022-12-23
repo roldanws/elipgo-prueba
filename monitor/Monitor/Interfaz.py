@@ -97,15 +97,13 @@ class Interfaz:
             if metodo == 'GET':
                 url = url.split('?')
                 print("Accediendo a : ", url)
-                
                 self.establecer_encabezado({'Content-Type': 'application/x-www-form-urlencoded'})
-                print(self.encabezados)
                 response = requests.get(
                                         url=url[0],
                                         params =url[1],
                                         headers=self.encabezados,
                                         auth=self.auth,
-                                        verify=False,  #Necesario para Diguest auth
+                                        verify=False, 
                                         stream=True
                 )
                 

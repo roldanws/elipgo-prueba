@@ -8,6 +8,7 @@ class Camera(models.Model):
     #no_local = models.IntegerField(verbose_name='LocalNo', null=False, blank=False)
     #machine_name = models.CharField(max_length=200, verbose_name = 'Machine name', null=True, blank=True)
     #machine_adress = models.CharField(max_length=200, verbose_name = 'Machine address', null=True, blank=True)
+    serial_no = models.CharField(max_length=200, verbose_name = 'Numero de serie', null=True, blank=True, default="0")
     usuario = models.CharField(max_length=200, verbose_name = 'Usuario', null=False, blank=False)
     password = models.CharField(max_length=200, verbose_name = 'Password', null=False, blank=False)
     ip = models.CharField(max_length=50, verbose_name = 'Servidor', null=False, blank=False)

@@ -79,15 +79,12 @@ class CameraListView(ListView):
     def get_queryset(self):
         camera=Camera.objects.all()
         return camera
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print("var_cont",context)
         cameras = []
         for camera in self.object_list:
-            print("puerto:",camera.puerto)
-            print("usuario:",camera.usuario)
-            print("password:",camera.password)
-            print("servidor:",camera.ip)
+            
             puerto = Interfaz("api {}".format(camera.usuario))
             puerto.modificarConfiguracion(
                                     dispositivo = Interfaz.CAMARA_DAHUA, 
@@ -102,12 +99,17 @@ class CameraListView(ListView):
             cam = Cam("Camera 1", "CAM-{}".format(camera.id), "En camara")
             cam.establecerPuerto(puerto)
             cam.establecerComunicacion (comunicacion)
-            if cam.obtener_machine_name().text:
-                print("mn",cam.obtener_machine_name().text)
-                print(cam,type(cam),cam.variables[2].obtenerDescripcion())
-            cameras.append(cam)
-         
-        context['cameras']=cameras
+            if cam.obtener_serial_no():
+                #print("sn",cam.obtener_serial_no())
+                serial_no = cam.variables[2].obtenerDescripcion()
+                cameras.append(serial_no)
+                camera.serial_no = serial_no
+                camera.save()
+            else:
+                camera.serial_no = '0'
+                camera.save()
+
+        context['cameras_serial_no']=cameras
         return context
 
         '''puerto = Interfaz("api")

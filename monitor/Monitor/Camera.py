@@ -73,8 +73,8 @@ class Camera(Variable):
         #print ("Desde configurarDispositivo", args , kwargs)
         for key, value in kwargs.items():
             #print ("Imprimiendo el valor en modificar configuracion", key, value)
-            if key == "valorDeMoneda":
-                self.variables[2].establecerValor(value)
+            if key == "valor":
+                self.variables[3].establecerValor(value)
             if key == "direccion":
                 self.variables[0].establecerValor(value)
 
@@ -85,14 +85,6 @@ class Camera(Variable):
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
         if result:
             result = self.result_to_json(result.text)
-            
-
-
-        
-        """self.variables[0].establecerValor(r[0:3].decode('utf-8'))
-        self.variables[2].establecerValor(r[3:15].decode('utf-8'))
-        self.variables[1].establecerValor(r[15:27].decode('utf-8'))
-        self.variables[3].establecerValor(r[27:29])"""
         return result
     
     def obtener_current_time(self):
@@ -131,6 +123,17 @@ class Camera(Variable):
         #    result = self.result_to_json(result.text)
         self.variables[2].establecerDescripcion(result.text)
         return result
+
+    def obtener_serial_no(self):
+        metodo =  "magicBox.cgi"
+        parametros = { "action" : "getSerialNo"}
+        a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
+        result = self.puerto.enviar(Interfaz.METODO_GET,a)
+        if result:
+            result = self.result_to_json(result.text)
+            self.variables[2].establecerDescripcion(result.get('sn'))
+            result = result.get('sn')
+        return result
     
     def obtener_motion_settings(self):
         metodo =  "configManager.cgi"
@@ -146,7 +149,6 @@ class Camera(Variable):
         parametros = { "action" : "setConfig","MotionDetect[0].Enable":estado}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        print("Ressssult",result)
         #if result:
         #    result = self.result_to_json(result.text)
         return result
@@ -169,10 +171,6 @@ class Camera(Variable):
                                   for element in datos_json.split(',')))
         return result
         
-
-
-
-
 
     def obtenerNombre(self):
         return self.nombre
