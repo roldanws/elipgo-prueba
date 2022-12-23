@@ -82,6 +82,53 @@ class CameraListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print("var_cont",context)
+        cameras = []
+        for camera in self.object_list:
+            print("puerto:",camera.puerto)
+            print("usuario:",camera.usuario)
+            print("password:",camera.password)
+            print("servidor:",camera.ip)
+            puerto = Interfaz("api {}".format(camera.usuario))
+            puerto.modificarConfiguracion(
+                                    dispositivo = Interfaz.CAMARA_DAHUA, 
+                                    protocolo = 'http', 
+                                    servidor = camera.ip, 
+                                    puerto = camera.puerto, 
+                                    usuario = camera.usuario, 
+                                    password = camera.password,
+                                    )
+            comunicacion = Comunicacion ()
+            puerto.inicializar()
+            cam = Cam("Camera 1", "CAM-{}".format(camera.id), "En camara")
+            cam.establecerPuerto(puerto)
+            cam.establecerComunicacion (comunicacion)
+            if cam.obtener_machine_name().text:
+                print("mn",cam.obtener_machine_name().text)
+                print(cam,type(cam),cam.variables[2].obtenerDescripcion())
+            cameras.append(cam)
+         
+        context['cameras']=cameras
+        return context
+
+        '''puerto = Interfaz("api")
+        puerto.modificarConfiguracion(
+                                    dispositivo = Interfaz.CAMARA_DAHUA, 
+                                    protocolo = 'http', 
+                                    servidor = 'elipgomexico.ddns.net', 
+                                    puerto = '1938', 
+                                    usuario = 'test', 
+                                    password = 'test$2022'
+                                    )
+        comunicacion = Comunicacion ()
+        puerto.inicializar()
+        
+        # Se crea y se configura el dispositivo
+        camera1 = Cam("Camera 1", "CAM-001", "En camara")
+        camera1.establecerPuerto(puerto)
+        camera1.establecerComunicacion (comunicacion)
+        '''
+
+
         '''interfaz = Interfaz()
         body = ""
         print("con:::",context['camera_list'][0].ip, context['camera_list'][0].puerto)
@@ -99,8 +146,8 @@ class CameraListView(ListView):
         interfaz.establecer_ruta('cgi-bin/snapManager.cgi?action=attachFileProc&Flags[0]=Event&Events=[VideoMotion]&heartbeat=5')
         r = interfaz.enviar(Interfaz.PROCESO,body)
         print("Sucrubeee",r.text)
-        context['r']=r.text'''
-        return context
+        context['r']=r.text
+        return context'''
 
 
 class CameraCreateView(CreateView):

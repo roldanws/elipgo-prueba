@@ -136,6 +136,7 @@ class Interfaz:
             self.response = response.json()
 
             if err:
+                return -1
                 print("Ocurrio un error:",response.status_code)
             else: 
                 return self.response

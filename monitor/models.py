@@ -10,7 +10,7 @@ class Camera(models.Model):
     #machine_adress = models.CharField(max_length=200, verbose_name = 'Machine address', null=True, blank=True)
     usuario = models.CharField(max_length=200, verbose_name = 'Usuario', null=False, blank=False)
     password = models.CharField(max_length=200, verbose_name = 'Password', null=False, blank=False)
-    ip = models.CharField(max_length=50, verbose_name = 'Ip', null=False, blank=False)
+    ip = models.CharField(max_length=50, verbose_name = 'Servidor', null=False, blank=False)
     puerto = models.IntegerField(verbose_name='Puerto', null=False, blank=False, default=0)
     created = models.DateTimeField(verbose_name = 'Fecha creacion', default = now)
     updated = models.DateTimeField(auto_now=True, verbose_name = 'Ultima modificacion')

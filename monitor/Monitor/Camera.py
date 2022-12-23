@@ -22,7 +22,7 @@ class Camera(Variable):
 
         self.variables[0]=Variable("X_00", "Fabricante", "Nombre del fabricante")
         self.variables[1]=Variable("X_01", "Modelo", "")
-        self.variables[2]=Variable("X_02", "Número de Serie", "Número de serie")
+        self.variables[2]=Variable("X_02", "Número de Serie", "Número de ser")
         self.variables[3]=Variable("X_03", "Versión de Software", "")
         self.variables[4]=Variable("X_04", "", "")
         self.variables[5]=Variable("X_05", "Estatus", "")
@@ -53,6 +53,7 @@ class Camera(Variable):
         self.variables[29]=Variable("X_29", "", "")
         self.variables[30]=Variable("X_30", "", "")
 
+
         self.configurarDispositivo (**kwargs)
         self.actualizar()
 
@@ -82,13 +83,16 @@ class Camera(Variable):
         parametros = { "action" : "getConfig" , "name" : "General"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        result = self.result_to_json(result.text)
+        if result:
+            result = self.result_to_json(result.text)
+            
+
+
         
         """self.variables[0].establecerValor(r[0:3].decode('utf-8'))
         self.variables[2].establecerValor(r[3:15].decode('utf-8'))
         self.variables[1].establecerValor(r[15:27].decode('utf-8'))
         self.variables[3].establecerValor(r[27:29])"""
-        print(result)
         return result
     
     def obtener_current_time(self):
@@ -96,7 +100,8 @@ class Camera(Variable):
         parametros = { "action" : "getCurrentTime"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        result = self.result_to_json(result.text)
+        if result:
+            result = self.result_to_json(result.text)
         return result
 
     def obtener_locales_config(self):
@@ -104,7 +109,8 @@ class Camera(Variable):
         parametros = { "action" : "getConfig","name":"Locales"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        result = self.result_to_json(result.text)
+        if result:
+            result = self.result_to_json(result.text)
         return result
     
     def obtener_device_type(self):
@@ -112,7 +118,8 @@ class Camera(Variable):
         parametros = { "action" : "getDeviceType"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        result = self.result_to_json(result.text)
+        if result:
+            result = self.result_to_json(result.text)
         return result
 
     def obtener_machine_name(self):
@@ -120,7 +127,9 @@ class Camera(Variable):
         parametros = { "action" : "getMachineName"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        #result = self.result_to_json(result.text)
+        #if result:
+        #    result = self.result_to_json(result.text)
+        self.variables[2].establecerDescripcion(result.text)
         return result
     
     def obtener_motion_settings(self):
@@ -128,7 +137,8 @@ class Camera(Variable):
         parametros = { "action" : "getConfig","name":"MotionDetect"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        result = self.result_to_json(result.text)
+        if result:
+            result = self.result_to_json(result.text)
         return result
     
     def actualizar_motion_settings(self, estado=None,**kwargs):
@@ -137,7 +147,8 @@ class Camera(Variable):
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
         print("Ressssult",result)
-        #result = self.result_to_json(result.text)
+        #if result:
+        #    result = self.result_to_json(result.text)
         return result
     
     def obtener_snapshot(self):
@@ -145,7 +156,8 @@ class Camera(Variable):
         parametros = { "channel" : "1"}
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
-        #result = self.result_to_json(result.text)
+        #if result:
+        #    result = self.result_to_json(result.text)
         return result
 
 
