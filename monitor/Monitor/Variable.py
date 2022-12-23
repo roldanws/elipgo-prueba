@@ -3,7 +3,6 @@ __date__ = "$20-may-2019 10:33:36$"
 
 
 class Variable():
-    
     ESTADO_DESHABILITADO = 0   
     ESTADO_APAGADO = 1
     ESTADO_ENCENDIDO = 2

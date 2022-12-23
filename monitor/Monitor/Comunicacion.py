@@ -9,7 +9,9 @@ INDICE_DATOS = 15
 TAMANIO_MINIMO_TRAMA = 17
 
 class Comunicacion ():
-    
+    """
+    Clase utulizada para construir los paquetes de datos en base a un protocolo
+    """
     caracterDeInicio = '-';
     caracterDeFin = '*';
     

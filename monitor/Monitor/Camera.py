@@ -4,7 +4,9 @@ from .Comunicacion import Comunicacion
 from .Interfaz import Interfaz
 
 class Camera(Variable):
-    
+    """
+    Clase utulizada para definir un dispositivo camara y sus metodos basados en el manual DAHUA_HTTP_API_V2.841
+    """
     HABILITAR = b'\xAC'
     DESHABILITAR = b'\xAB'
 
