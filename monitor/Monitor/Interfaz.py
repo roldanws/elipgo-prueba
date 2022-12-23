@@ -23,7 +23,7 @@ class Interfaz:
         self.usuario = None
         self.password = None
         self.ruta = ''
-        self.encabezados = []
+        self.encabezados = ''
         self.auth = ''
         self.metodo = None
         self.datos = None
@@ -65,7 +65,7 @@ class Interfaz:
 
     def obtener_url(self,url):
         return self.url
-    def obtener_encabezado(self,encabezado):
+    def obtener_encabezado(self):
         return self.encabezado
     def obtener_metodo(self,metodo):
         return self.metodo
@@ -80,7 +80,7 @@ class Interfaz:
         self.auth = HTTPDigestAuth(usuario, password)
 
     def establecer_encabezado(self,encabezado):
-        self.encabezado = encabezado
+        self.encabezados = encabezado
     def establecer_metodo(self,metodo):
         self.metodo = metodo
 
@@ -91,20 +91,24 @@ class Interfaz:
         if parametros:
             url = url + parametros
 
-        print("Url : ", url)
-        
-
         try:
              
 
             if metodo == 'GET':
+                url = url.split('?')
+                print("Accediendo a : ", url)
+                
+                self.establecer_encabezado({'Content-Type': 'application/x-www-form-urlencoded'})
+                print(self.encabezados)
                 response = requests.get(
-                                        url,
-                                        auth=self.auth,
+                                        url=url[0],
+                                        params =url[1],
                                         headers=self.encabezados,
+                                        auth=self.auth,
                                         verify=False,  #Necesario para Diguest auth
                                         stream=True
                 )
+                
                 if response.status_code not in self.CODIGOS_EXITOSOS:
                     err = 1
                 else:

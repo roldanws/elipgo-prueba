@@ -97,7 +97,6 @@ class Camera(Variable):
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
         result = self.result_to_json(result.text)
-        print(result)
         return result
 
     def obtener_locales_config(self):
@@ -106,7 +105,39 @@ class Camera(Variable):
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
         result = self.result_to_json(result.text)
-        print(result)
+        return result
+    
+    def obtener_device_type(self):
+        metodo =  "magicBox.cgi"
+        parametros = { "action" : "getDeviceType"}
+        a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
+        result = self.puerto.enviar(Interfaz.METODO_GET,a)
+        result = self.result_to_json(result.text)
+        return result
+
+    def obtener_machine_name(self):
+        metodo =  "magicBox.cgi"
+        parametros = { "action" : "getMachineName"}
+        a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
+        result = self.puerto.enviar(Interfaz.METODO_GET,a)
+        #result = self.result_to_json(result.text)
+        return result
+    
+    def obtener_motion_settings(self):
+        metodo =  "configManager.cgi"
+        parametros = { "action" : "getConfig","name":"MotionDetect"}
+        a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
+        result = self.puerto.enviar(Interfaz.METODO_GET,a)
+        result = self.result_to_json(result.text)
+        return result
+    
+    def actualizar_motion_settings(self, estado=None,**kwargs):
+        metodo =  "configManager.cgi"
+        parametros = { "action" : "setConfig","MotionDetect[0].Enable":estado}
+        a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
+        result = self.puerto.enviar(Interfaz.METODO_GET,a)
+        print("Ressssult",result)
+        #result = self.result_to_json(result.text)
         return result
     
     def obtener_snapshot(self):
@@ -115,7 +146,6 @@ class Camera(Variable):
         a = self.comunicacion.crearInstruccionHttp(Comunicacion.PROCESO, Comunicacion.HTTP_DATOS_DAHUA, metodo, parametros)
         result = self.puerto.enviar(Interfaz.METODO_GET,a)
         #result = self.result_to_json(result.text)
-        print(result)
         return result
 
 

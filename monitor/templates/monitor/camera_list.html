@@ -32,21 +32,21 @@
 
         <div class="row">
             {% for camera in camera_list %}
-            <div class="col-3">
+            <div class="col-4">
                 <div class="card">
-                    <img class="card-img-top" src="..." alt="Flujo de video">
-                    <iframe src="rtsp://test:test$2022@elipgomexico.ddns.net:1938/cam/realmonitor?channel=1&subtype=1"></iframe>
+                    <!-- <iframe src="rtsp://test:test$2022@elipgomexico.ddns.net:1938/cam/realmonitor?channel=1&subtype=1"></iframe> -->
+                    <iframe src="https://rtsp.me/embed/zit3HG66/" frameborder="0" allowfullscreen></iframe>
                     <div class="card-body">
                         <h5 class="card-title">Camera {{camera.id}}</h5>
                         <p class="card-text">{{serial_no}}</p>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">url:{{camera.ip}}</li>
+                        <li class="list-group-item">url: {{camera.ip}}</li>
 
                     </ul>
                     <div class="card-body">
                         <a href="#" class="card-link">Obtener imagen</a>
-                        <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Ver" type="button" class="card-link">Detalles </a>
+                        <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Ver" type="button" class="card-link">Mas informacion </a>
                     </div>
                 </div>
             </div>
@@ -54,42 +54,6 @@
 
         </div>
 
-
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th width="35%">Nombre</th>
-                    <th>Camara id</th>
-                    <th>Usuario</th>
-                    <th>Ip</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for camera in camera_list %}
-                <tr>
-                    <td>{{ camera.id }}</td>
-                    <td>{{ camera.usuario }}</td>
-                    <td>{{ camera.ip }}</td>
-                    <td>
-                        <form method="POST" action="{% url 'camera:camera' camera.id camera.usuario|slugify %}">
-                            {% csrf_token %}
-                            <div class="btn-group">
-
-                                <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Ver" type="button" class="btn btn-success">Ver </a> {% if rol %}
-                                <a href="{% url 'camera:camera' camera.id camera.usuario|slugify%}" title="Editar" type="button" class="btn btn-primary">Editar </a>
-                                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                Eliminar
-                                {% endif %}
-                            </button>
-                            </div>
-                        </form>
-
-                    </td>
-                </tr>
-                {% endfor %}
-
-            </tbody>
-        </table>
 
     </div>
 </main>
